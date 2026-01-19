@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { BracesIcon, GithubIcon } from './Icons'
+import { BracesIcon, GithubIcon, SunIcon, MoonIcon } from './Icons'
+import { useTheme } from '../hooks/useTheme'
 
 const tools = [
   { name: 'Formatter', href: '/formatter' },
@@ -10,6 +11,8 @@ const tools = [
 ]
 
 export function Header() {
+  const { theme, toggleTheme } = useTheme()
+
   return (
     <header className="border-b bg-card">
       <div className="container mx-auto px-4">
@@ -28,6 +31,13 @@ export function Header() {
                 {tool.name}
               </Link>
             ))}
+            <button
+              onClick={toggleTheme}
+              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+            </button>
             <a
               href="https://github.com/Root-kjh/json-tools"
               target="_blank"
