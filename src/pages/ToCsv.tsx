@@ -1,5 +1,7 @@
-import { useState, useCallback } from 'react'
-import { CopyIcon, CheckIcon, Trash2Icon, DownloadIcon, TableIcon } from '../components/Icons'
+import { useState, useCallback, useMemo } from 'react'
+import { CopyIcon, CheckIcon, Trash2Icon, DownloadIcon, TableIcon, UploadIcon } from '../components/Icons'
+import { useFileDrop } from '../hooks/useFileDrop'
+import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 
 type JsonArray = Record<string, unknown>[]
 
@@ -100,12 +102,31 @@ export function ToCsv() {
     setInput(JSON.stringify(sample, null, 2))
   }, [])
 
+  const { isDragging, dragProps } = useFileDrop({
+    onFileDrop: setInput,
+  })
+
+  const shortcuts = useMemo(() => [
+    { key: 'Enter', ctrl: true, handler: convert },
+    { key: 'c', ctrl: true, shift: true, handler: copyToClipboard },
+    { key: 's', ctrl: true, handler: downloadCsv },
+  ], [convert, copyToClipboard, downloadCsv])
+
+  useKeyboardShortcut(shortcuts)
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">JSON to CSV</h1>
         <p className="text-muted-foreground mt-2">
           Convert JSON arrays to CSV format for spreadsheets
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-[10px]">⌘+Enter</kbd> Convert
+          <span className="mx-2">·</span>
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-[10px]">⌘+Shift+C</kbd> Copy
+          <span className="mx-2">·</span>
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-[10px]">⌘+S</kbd> Download
         </p>
       </div>
 
@@ -157,13 +178,26 @@ export function ToCsv() {
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-2">
           <label className="text-sm font-medium">Input JSON (array of objects)</label>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder='[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]'
-            className="w-full h-[500px] p-4 font-mono text-sm bg-card border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-            spellCheck={false}
-          />
+          <div
+            {...dragProps}
+            className={`relative ${isDragging ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+          >
+            {isDragging && (
+              <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-md flex items-center justify-center z-10">
+                <div className="flex items-center gap-2 text-primary">
+                  <UploadIcon className="h-6 w-6" />
+                  <span className="font-medium">Drop JSON file here</span>
+                </div>
+              </div>
+            )}
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder='[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]'
+              className="w-full h-[500px] p-4 font-mono text-sm bg-card border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              spellCheck={false}
+            />
+          </div>
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium">CSV Output</label>

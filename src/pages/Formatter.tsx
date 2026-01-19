@@ -1,5 +1,7 @@
-import { useState, useCallback } from 'react'
-import { CopyIcon, CheckIcon, Trash2Icon, Minimize2Icon, Maximize2Icon } from '../components/Icons'
+import { useState, useCallback, useMemo } from 'react'
+import { CopyIcon, CheckIcon, Trash2Icon, Minimize2Icon, Maximize2Icon, UploadIcon } from '../components/Icons'
+import { useFileDrop } from '../hooks/useFileDrop'
+import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 
 export function Formatter() {
   const [input, setInput] = useState('')
@@ -75,12 +77,31 @@ export function Formatter() {
     setInput(JSON.stringify(sample))
   }, [])
 
+  const { isDragging, dragProps } = useFileDrop({
+    onFileDrop: setInput,
+  })
+
+  const shortcuts = useMemo(() => [
+    { key: 'Enter', ctrl: true, handler: formatJson },
+    { key: 'c', ctrl: true, shift: true, handler: copyToClipboard },
+    { key: 'm', ctrl: true, handler: minifyJson },
+  ], [formatJson, copyToClipboard, minifyJson])
+
+  useKeyboardShortcut(shortcuts)
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">JSON Formatter & Validator</h1>
         <p className="text-muted-foreground mt-2">
           Format, beautify, and validate your JSON with syntax highlighting
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-[10px]">⌘+Enter</kbd> Format
+          <span className="mx-2">·</span>
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-[10px]">⌘+M</kbd> Minify
+          <span className="mx-2">·</span>
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-[10px]">⌘+Shift+C</kbd> Copy
         </p>
       </div>
 
@@ -143,13 +164,26 @@ export function Formatter() {
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-2">
           <label className="text-sm font-medium">Input JSON</label>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Paste your JSON here..."
-            className="w-full h-[500px] p-4 font-mono text-sm bg-card border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-            spellCheck={false}
-          />
+          <div
+            {...dragProps}
+            className={`relative ${isDragging ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+          >
+            {isDragging && (
+              <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-md flex items-center justify-center z-10">
+                <div className="flex items-center gap-2 text-primary">
+                  <UploadIcon className="h-6 w-6" />
+                  <span className="font-medium">Drop JSON file here</span>
+                </div>
+              </div>
+            )}
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Paste your JSON here or drag & drop a file..."
+              className="w-full h-[500px] p-4 font-mono text-sm bg-card border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              spellCheck={false}
+            />
+          </div>
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium">

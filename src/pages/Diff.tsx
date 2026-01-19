@@ -1,5 +1,7 @@
-import { useState, useCallback } from 'react'
-import { GitCompareIcon, Trash2Icon } from '../components/Icons'
+import { useState, useCallback, useMemo } from 'react'
+import { GitCompareIcon, Trash2Icon, UploadIcon } from '../components/Icons'
+import { useFileDrop } from '../hooks/useFileDrop'
+import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 
 type DiffType = 'added' | 'removed' | 'changed' | 'unchanged'
 
@@ -80,6 +82,7 @@ export function Diff() {
   const [right, setRight] = useState('')
   const [results, setResults] = useState<DiffResult[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [activeDropZone, setActiveDropZone] = useState<'left' | 'right' | null>(null)
 
   const compare = useCallback(() => {
     if (!left.trim() || !right.trim()) {
@@ -123,6 +126,20 @@ export function Diff() {
     }, null, 2))
   }, [])
 
+  const leftDrop = useFileDrop({
+    onFileDrop: setLeft,
+  })
+
+  const rightDrop = useFileDrop({
+    onFileDrop: setRight,
+  })
+
+  const shortcuts = useMemo(() => [
+    { key: 'Enter', ctrl: true, handler: compare },
+  ], [compare])
+
+  useKeyboardShortcut(shortcuts)
+
   const getTypeColor = (type: DiffType) => {
     switch (type) {
       case 'added': return 'bg-green-500/20 text-green-400 border-green-500/30'
@@ -147,6 +164,9 @@ export function Diff() {
         <h1 className="text-3xl font-bold">JSON Diff</h1>
         <p className="text-muted-foreground mt-2">
           Compare two JSON objects and see the differences
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-[10px]">⌘+Enter</kbd> Compare
         </p>
       </div>
 
@@ -182,23 +202,55 @@ export function Diff() {
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-2">
           <label className="text-sm font-medium">Left JSON (Original)</label>
-          <textarea
-            value={left}
-            onChange={(e) => setLeft(e.target.value)}
-            placeholder="Paste original JSON here..."
-            className="w-full h-[300px] p-4 font-mono text-sm bg-card border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-            spellCheck={false}
-          />
+          <div
+            {...leftDrop.dragProps}
+            onDragEnter={() => setActiveDropZone('left')}
+            onDragLeave={() => setActiveDropZone(null)}
+            onDrop={(e) => { leftDrop.dragProps.onDrop(e); setActiveDropZone(null) }}
+            className={`relative ${activeDropZone === 'left' ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+          >
+            {activeDropZone === 'left' && (
+              <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-md flex items-center justify-center z-10">
+                <div className="flex items-center gap-2 text-primary">
+                  <UploadIcon className="h-6 w-6" />
+                  <span className="font-medium">Drop JSON file here</span>
+                </div>
+              </div>
+            )}
+            <textarea
+              value={left}
+              onChange={(e) => setLeft(e.target.value)}
+              placeholder="Paste original JSON here or drag & drop..."
+              className="w-full h-[300px] p-4 font-mono text-sm bg-card border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              spellCheck={false}
+            />
+          </div>
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium">Right JSON (Modified)</label>
-          <textarea
-            value={right}
-            onChange={(e) => setRight(e.target.value)}
-            placeholder="Paste modified JSON here..."
-            className="w-full h-[300px] p-4 font-mono text-sm bg-card border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-            spellCheck={false}
-          />
+          <div
+            {...rightDrop.dragProps}
+            onDragEnter={() => setActiveDropZone('right')}
+            onDragLeave={() => setActiveDropZone(null)}
+            onDrop={(e) => { rightDrop.dragProps.onDrop(e); setActiveDropZone(null) }}
+            className={`relative ${activeDropZone === 'right' ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+          >
+            {activeDropZone === 'right' && (
+              <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-md flex items-center justify-center z-10">
+                <div className="flex items-center gap-2 text-primary">
+                  <UploadIcon className="h-6 w-6" />
+                  <span className="font-medium">Drop JSON file here</span>
+                </div>
+              </div>
+            )}
+            <textarea
+              value={right}
+              onChange={(e) => setRight(e.target.value)}
+              placeholder="Paste modified JSON here or drag & drop..."
+              className="w-full h-[300px] p-4 font-mono text-sm bg-card border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              spellCheck={false}
+            />
+          </div>
         </div>
       </div>
 
