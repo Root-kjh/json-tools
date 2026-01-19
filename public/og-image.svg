@@ -1,0 +1,54 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#09090B"/>
+  
+  <rect x="40" y="40" width="1120" height="550" rx="16" fill="#18181B" stroke="#27272A" stroke-width="2"/>
+  
+  <g transform="translate(100, 180)">
+    <rect width="80" height="80" rx="16" fill="#3B82F6" fill-opacity="0.1"/>
+    <path d="M28 24H24C21.79 24 20 25.79 20 28V48C20 49.1 20.45 50.1 21.17 50.83C20.45 51.55 20 52.55 20 53.67V58C20 60.21 21.79 62 24 62H28" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" transform="translate(16, 16)"/>
+    <path d="M52 62H56C58.21 62 60 60.21 60 58V53.67C60 52.57 59.55 51.57 58.83 50.85C59.55 50.12 60 49.12 60 48V28C60 25.79 58.21 24 56 24H52" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" transform="translate(16, 16)"/>
+  </g>
+  
+  <text x="200" y="235" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="700" fill="#FAFAFA">JSON Tools</text>
+  
+  <text x="100" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#A1A1AA">Free, privacy-first online JSON utilities</text>
+  
+  <g transform="translate(100, 380)">
+    <rect width="280" height="48" rx="24" fill="#22C55E" fill-opacity="0.1" stroke="#22C55E" stroke-opacity="0.3"/>
+    <circle cx="28" cy="24" r="8" fill="#22C55E"/>
+    <text x="48" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#4ADE80">100% Client-Side</text>
+  </g>
+  
+  <g transform="translate(400, 380)">
+    <rect width="180" height="48" rx="24" fill="#27272A"/>
+    <text x="24" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#A1A1AA">No Server</text>
+  </g>
+  
+  <g transform="translate(600, 380)">
+    <rect width="180" height="48" rx="24" fill="#27272A"/>
+    <text x="24" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#A1A1AA">Open Source</text>
+  </g>
+  
+  <g transform="translate(100, 480)">
+    <text font-family="monospace" font-size="20" fill="#3B82F6">Formatter</text>
+    <text x="140" font-family="monospace" font-size="20" fill="#71717A">|</text>
+    <text x="170" font-family="monospace" font-size="20" fill="#3B82F6">TypeScript</text>
+    <text x="310" font-family="monospace" font-size="20" fill="#71717A">|</text>
+    <text x="340" font-family="monospace" font-size="20" fill="#3B82F6">CSV</text>
+    <text x="400" font-family="monospace" font-size="20" fill="#71717A">|</text>
+    <text x="430" font-family="monospace" font-size="20" fill="#3B82F6">Diff</text>
+    <text x="490" font-family="monospace" font-size="20" fill="#71717A">|</text>
+    <text x="520" font-family="monospace" font-size="20" fill="#3B82F6">Path Finder</text>
+  </g>
+  
+  <text x="100" y="560" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#52525B">json.jobby-time.com</text>
+  
+  <g transform="translate(900, 450)">
+    <rect width="200" height="100" rx="8" fill="#1E1E1E" stroke="#3B82F6" stroke-opacity="0.5"/>
+    <text x="16" y="28" font-family="monospace" font-size="14" fill="#6B7280">{</text>
+    <text x="24" y="48" font-family="monospace" font-size="14" fill="#3B82F6">"privacy"</text>
+    <text x="100" y="48" font-family="monospace" font-size="14" fill="#6B7280">:</text>
+    <text x="110" y="48" font-family="monospace" font-size="14" fill="#22C55E">true</text>
+    <text x="16" y="68" font-family="monospace" font-size="14" fill="#6B7280">}</text>
+  </g>
+</svg>
