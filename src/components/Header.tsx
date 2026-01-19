@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BracesIcon } from './Icons'
+import { BracesIcon, GithubIcon } from './Icons'
 
 const tools = [
   { name: 'Formatter', href: '/formatter' },
@@ -28,6 +28,15 @@ export function Header() {
                 {tool.name}
               </Link>
             ))}
+            <a
+              href="https://github.com/Root-kjh/json-tools"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="GitHub"
+            >
+              <GithubIcon className="h-5 w-5" />
+            </a>
           </nav>
         </div>
       </div>

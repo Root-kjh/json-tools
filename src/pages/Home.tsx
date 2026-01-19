@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon } from '../components/Icons'
+import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon } from '../components/Icons'
 
 const tools = [
   {
@@ -50,6 +50,23 @@ export function Home() {
           Free online tools to format, validate, convert, and compare JSON.
           All processing happens in your browser - your data never leaves your device.
         </p>
+        
+        <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-green-400">
+            <ShieldCheckIcon className="h-4 w-4" />
+            <span className="text-sm font-medium">100% Client-Side Processing</span>
+          </div>
+          <a
+            href="https://github.com/Root-kjh/json-tools"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+          >
+            <GithubIcon className="h-4 w-4" />
+            <span className="text-sm font-medium">Star on GitHub</span>
+            <StarIcon className="h-3 w-3" />
+          </a>
+        </div>
       </section>
 
       <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
