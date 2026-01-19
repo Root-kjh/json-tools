@@ -6,6 +6,7 @@ const tools = [
   { name: 'Formatter', href: '/formatter' },
   { name: 'To TypeScript', href: '/to-typescript' },
   { name: 'To CSV', href: '/to-csv' },
+  { name: 'To Schema', href: '/to-schema' },
   { name: 'Diff', href: '/diff' },
   { name: 'Path Finder', href: '/path-finder' },
 ]

@@ -11,6 +11,7 @@ Free, privacy-first online JSON utilities. All processing happens in your browse
 - **JSON Formatter & Validator** - Format, beautify, minify, and validate JSON with customizable indentation
 - **JSON to TypeScript** - Generate TypeScript interfaces from JSON data
 - **JSON to CSV** - Convert JSON arrays to CSV format for spreadsheets
+- **JSON to Schema** - Generate JSON Schema (Draft 2020-12) with automatic format detection
 - **JSON Diff** - Compare two JSON objects and visualize differences
 - **JSON Path Finder** - Click on any value to get its JSONPath
 
@@ -62,10 +63,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Roadmap
 
-- [ ] Keyboard shortcuts
-- [ ] File drag & drop support
-- [ ] Dark/Light mode toggle
-- [ ] JSON Schema generator
+- [x] Keyboard shortcuts
+- [x] File drag & drop support
+- [x] Dark/Light mode toggle
+- [x] JSON Auto-Repair
+- [x] JSON Schema generator
 - [ ] Chrome extension
 - [ ] Large file optimization (5MB+)
 

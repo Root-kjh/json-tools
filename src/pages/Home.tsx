@@ -21,6 +21,12 @@ const tools = [
     icon: ArrowRightLeftIcon,
   },
   {
+    name: 'JSON to Schema',
+    description: 'Generate JSON Schema with format detection',
+    href: '/to-schema',
+    icon: BracesIcon,
+  },
+  {
     name: 'JSON Diff',
     description: 'Compare two JSON objects and see the differences',
     href: '/diff',
