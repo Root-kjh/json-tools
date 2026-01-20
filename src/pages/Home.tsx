@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon } from '../components/Icons'
+import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon, Minimize2Icon } from '../components/Icons'
 import { useSEO } from '../hooks/useSEO'
 
 const tools = [
@@ -8,6 +8,12 @@ const tools = [
     description: 'Format, beautify, and validate your JSON with syntax highlighting',
     href: '/formatter',
     icon: FileJsonIcon,
+  },
+  {
+    name: 'JSON Minifier',
+    description: 'Compress JSON by removing whitespace for smaller file size',
+    href: '/minifier',
+    icon: Minimize2Icon,
   },
   {
     name: 'JSON to TypeScript',
@@ -25,6 +31,12 @@ const tools = [
     name: 'JSON to YAML',
     description: 'Convert JSON to YAML for config files and DevOps tools',
     href: '/to-yaml',
+    icon: ArrowRightLeftIcon,
+  },
+  {
+    name: 'YAML to JSON',
+    description: 'Convert YAML config files back to JSON format',
+    href: '/from-yaml',
     icon: ArrowRightLeftIcon,
   },
   {
