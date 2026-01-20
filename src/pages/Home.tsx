@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon } from '../components/Icons'
+import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon } from '../components/Icons'
 import { useSEO } from '../hooks/useSEO'
 
 const tools = [
@@ -38,6 +38,12 @@ const tools = [
     description: 'Click on any value to get its JSON path',
     href: '/path-finder',
     icon: SearchIcon,
+  },
+  {
+    name: '✨ AI Assistant',
+    description: 'Generate JSON from natural language, explain structures, create mock data',
+    href: '/ai-assistant',
+    icon: SparklesIcon,
   },
 ]
 

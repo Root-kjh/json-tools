@@ -9,6 +9,7 @@ const tools = [
   { name: 'To Schema', href: '/to-schema' },
   { name: 'Diff', href: '/diff' },
   { name: 'Path Finder', href: '/path-finder' },
+  { name: '✨ AI Assistant', href: '/ai-assistant' },
 ]
 
 export function Header() {

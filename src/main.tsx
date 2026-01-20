@@ -10,6 +10,7 @@ import { ToCsv } from './pages/ToCsv'
 import { ToSchema } from './pages/ToSchema'
 import { Diff } from './pages/Diff'
 import { PathFinder } from './pages/PathFinder'
+import { AiAssistant } from './pages/AiAssistant'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="to-schema" element={<ToSchema />} />
           <Route path="diff" element={<Diff />} />
           <Route path="path-finder" element={<PathFinder />} />
+          <Route path="ai-assistant" element={<AiAssistant />} />
         </Route>
       </Routes>
     </BrowserRouter>

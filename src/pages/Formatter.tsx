@@ -1,8 +1,9 @@
-import { useState, useCallback, useMemo } from 'react'
-import { CopyIcon, CheckIcon, Trash2Icon, Minimize2Icon, Maximize2Icon, UploadIcon, WrenchIcon } from '../components/Icons'
+import { useState, useCallback, useMemo, useEffect } from 'react'
+import { CopyIcon, CheckIcon, Trash2Icon, Minimize2Icon, Maximize2Icon, UploadIcon, WrenchIcon, ShareIcon, LinkIcon } from '../components/Icons'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 import { useSEO } from '../hooks/useSEO'
+import { useShareUrl } from '../hooks/useShareUrl'
 import { repairJson } from '../utils/jsonRepair'
 
 export function Formatter() {
@@ -18,6 +19,22 @@ export function Formatter() {
   const [copied, setCopied] = useState(false)
   const [indentSize, setIndentSize] = useState(2)
   const [repairInfo, setRepairInfo] = useState<string[] | null>(null)
+  const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'error'>('idle')
+  const [shareError, setShareError] = useState<string | null>(null)
+
+  const { sharedData, shareUrl, isShared, clearShare } = useShareUrl()
+
+  useEffect(() => {
+    if (sharedData) {
+      setInput(sharedData)
+      try {
+        const parsed = JSON.parse(sharedData)
+        setOutput(JSON.stringify(parsed, null, indentSize))
+      } catch {
+        setOutput('')
+      }
+    }
+  }, [sharedData, indentSize])
 
   const formatJson = useCallback(() => {
     if (!input.trim()) {
@@ -111,6 +128,27 @@ export function Formatter() {
     setInput(JSON.stringify(sample))
   }, [])
 
+  const handleShare = useCallback(async () => {
+    if (!input.trim()) return
+    
+    const result = await shareUrl(input)
+    if (result.success) {
+      setShareStatus('copied')
+      setShareError(null)
+      setTimeout(() => setShareStatus('idle'), 2000)
+    } else {
+      setShareStatus('error')
+      setShareError(result.error || 'Failed to share')
+      setTimeout(() => setShareStatus('idle'), 3000)
+    }
+  }, [input, shareUrl])
+
+  const handleClearShare = useCallback(() => {
+    clearShare()
+    setInput('')
+    setOutput('')
+  }, [clearShare])
+
   const { isDragging, dragProps } = useFileDrop({
     onFileDrop: setInput,
   })
@@ -182,6 +220,14 @@ export function Formatter() {
         >
           Load Sample
         </button>
+        <button
+          onClick={handleShare}
+          disabled={!input.trim()}
+          className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {shareStatus === 'copied' ? <LinkIcon className="h-4 w-4" /> : <ShareIcon className="h-4 w-4" />}
+          {shareStatus === 'copied' ? 'Link Copied!' : shareStatus === 'error' ? 'Error' : 'Share'}
+        </button>
         <div className="flex items-center gap-2 ml-auto">
           <label className="text-sm text-muted-foreground">Indent:</label>
           <select
@@ -195,6 +241,27 @@ export function Formatter() {
           </select>
         </div>
       </div>
+
+      {isShared && (
+        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-md text-foreground flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <LinkIcon className="h-4 w-4 text-blue-500" />
+            <span className="text-sm">Loaded from shared link</span>
+          </div>
+          <button
+            onClick={handleClearShare}
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            Clear
+          </button>
+        </div>
+      )}
+
+      {shareError && (
+        <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-md text-destructive">
+          <strong>Share Error:</strong> {shareError}
+        </div>
+      )}
 
       {error && (
         <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-md text-destructive">
