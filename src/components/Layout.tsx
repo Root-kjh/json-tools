@@ -1,7 +1,10 @@
 import { Outlet } from 'react-router-dom'
 import { Header } from './Header'
+import { useRecentTools } from '../hooks/useRecentTools'
 
 export function Layout() {
+  useRecentTools()
+  
   return (
     <div className="min-h-screen flex flex-col">
       <Header />

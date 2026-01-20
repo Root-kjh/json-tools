@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './index.css'
 import { Layout } from './components/Layout'
 import { ToastProvider } from './components/Toast'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { ShortcutsModal } from './components/ShortcutsModal'
 import { Home } from './pages/Home'
 
 const Formatter = lazy(() => import('./pages/Formatter').then(m => ({ default: m.Formatter })))
@@ -22,6 +24,9 @@ const PathFinder = lazy(() => import('./pages/PathFinder').then(m => ({ default:
 const AiAssistant = lazy(() => import('./pages/AiAssistant').then(m => ({ default: m.AiAssistant })))
 const Escape = lazy(() => import('./pages/Escape').then(m => ({ default: m.Escape })))
 const ToXml = lazy(() => import('./pages/ToXml').then(m => ({ default: m.ToXml })))
+const Sorter = lazy(() => import('./pages/Sorter').then(m => ({ default: m.Sorter })))
+const Base64 = lazy(() => import('./pages/Base64').then(m => ({ default: m.Base64 })))
+const Flattener = lazy(() => import('./pages/Flattener').then(m => ({ default: m.Flattener })))
 
 function PageLoader() {
   return (
@@ -33,9 +38,11 @@ function PageLoader() {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ToastProvider>
-      <BrowserRouter>
-        <Routes>
+    <ErrorBoundary>
+      <ToastProvider>
+        <BrowserRouter>
+          <ShortcutsModal />
+          <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="formatter" element={<Suspense fallback={<PageLoader />}><Formatter /></Suspense>} />
@@ -54,6 +61,9 @@ createRoot(document.getElementById('root')!).render(
           <Route path="ai-assistant" element={<Suspense fallback={<PageLoader />}><AiAssistant /></Suspense>} />
           <Route path="escape" element={<Suspense fallback={<PageLoader />}><Escape /></Suspense>} />
           <Route path="to-xml" element={<Suspense fallback={<PageLoader />}><ToXml /></Suspense>} />
+          <Route path="sorter" element={<Suspense fallback={<PageLoader />}><Sorter /></Suspense>} />
+          <Route path="base64" element={<Suspense fallback={<PageLoader />}><Base64 /></Suspense>} />
+          <Route path="flattener" element={<Suspense fallback={<PageLoader />}><Flattener /></Suspense>} />
           
           {/* SEO Alias Routes - Redirects for common search terms */}
           <Route path="json-parser" element={<Navigate to="/formatter" replace />} />
@@ -66,8 +76,9 @@ createRoot(document.getElementById('root')!).render(
           <Route path="json-tree" element={<Navigate to="/viewer" replace />} />
           <Route path="json-compare" element={<Navigate to="/diff" replace />} />
         </Route>
-        </Routes>
-      </BrowserRouter>
-    </ToastProvider>
+          </Routes>
+        </BrowserRouter>
+      </ToastProvider>
+    </ErrorBoundary>
   </StrictMode>,
 )

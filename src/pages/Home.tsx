@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon, Minimize2Icon, CheckIcon, Maximize2Icon } from '../components/Icons'
 import { useSEO } from '../hooks/useSEO'
+import { getRecentTools, type RecentTool } from '../hooks/useRecentTools'
 
 const tools = [
   {
@@ -82,6 +84,24 @@ const tools = [
     icon: FileCodeIcon,
   },
   {
+    name: 'JSON Sorter',
+    description: 'Sort JSON object keys alphabetically',
+    href: '/sorter',
+    icon: ArrowRightLeftIcon,
+  },
+  {
+    name: 'JSON Base64',
+    description: 'Encode/decode JSON to Base64',
+    href: '/base64',
+    icon: CodeIcon,
+  },
+  {
+    name: 'JSON Flattener',
+    description: 'Flatten nested JSON to dot notation',
+    href: '/flattener',
+    icon: BracesIcon,
+  },
+  {
     name: '✨ AI Assistant',
     description: 'Generate JSON from natural language with AI',
     href: '/ai-assistant',
@@ -90,6 +110,12 @@ const tools = [
 ]
 
 export function Home() {
+  const [recentTools, setRecentTools] = useState<RecentTool[]>([])
+
+  useEffect(() => {
+    setRecentTools(getRecentTools())
+  }, [])
+
   useSEO({
     title: 'JSON Tools - Free Online JSON Formatter, Validator & Converter',
     description: 'Free online JSON tools - format, validate, convert to TypeScript/CSV/Schema, compare, and find paths. Privacy-first: all processing happens in your browser.',
@@ -98,6 +124,23 @@ export function Home() {
 
   return (
     <div className="space-y-12">
+      {recentTools.length > 0 && (
+        <section className="bg-secondary/30 rounded-lg p-4">
+          <h2 className="text-sm font-medium text-muted-foreground mb-3">Recently Used</h2>
+          <div className="flex flex-wrap gap-2">
+            {recentTools.map((tool) => (
+              <Link
+                key={tool.path}
+                to={tool.path}
+                className="px-3 py-1.5 bg-secondary hover:bg-secondary/80 rounded-md text-sm transition-colors"
+              >
+                {tool.name}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="text-center space-y-4 py-12">
         <div className="flex justify-center">
           <div className="p-4 rounded-full bg-primary/10">
