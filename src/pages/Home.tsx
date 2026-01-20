@@ -70,6 +70,18 @@ const tools = [
     icon: GitCompareIcon,
   },
   {
+    name: 'JSON Escape',
+    description: 'Escape and unescape JSON string characters',
+    href: '/escape',
+    icon: CodeIcon,
+  },
+  {
+    name: 'JSON to XML',
+    description: 'Convert JSON to XML format',
+    href: '/to-xml',
+    icon: FileCodeIcon,
+  },
+  {
     name: '✨ AI Assistant',
     description: 'Generate JSON from natural language with AI',
     href: '/ai-assistant',

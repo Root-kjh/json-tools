@@ -1,8 +1,9 @@
 import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './index.css'
 import { Layout } from './components/Layout'
+import { ToastProvider } from './components/Toast'
 import { Home } from './pages/Home'
 
 const Formatter = lazy(() => import('./pages/Formatter').then(m => ({ default: m.Formatter })))
@@ -19,6 +20,8 @@ const JsonQuery = lazy(() => import('./pages/JsonQuery').then(m => ({ default: m
 const Diff = lazy(() => import('./pages/Diff').then(m => ({ default: m.Diff })))
 const PathFinder = lazy(() => import('./pages/PathFinder').then(m => ({ default: m.PathFinder })))
 const AiAssistant = lazy(() => import('./pages/AiAssistant').then(m => ({ default: m.AiAssistant })))
+const Escape = lazy(() => import('./pages/Escape').then(m => ({ default: m.Escape })))
+const ToXml = lazy(() => import('./pages/ToXml').then(m => ({ default: m.ToXml })))
 
 function PageLoader() {
   return (
@@ -30,8 +33,9 @@ function PageLoader() {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="formatter" element={<Suspense fallback={<PageLoader />}><Formatter /></Suspense>} />
@@ -48,8 +52,22 @@ createRoot(document.getElementById('root')!).render(
           <Route path="diff" element={<Suspense fallback={<PageLoader />}><Diff /></Suspense>} />
           <Route path="path-finder" element={<Suspense fallback={<PageLoader />}><PathFinder /></Suspense>} />
           <Route path="ai-assistant" element={<Suspense fallback={<PageLoader />}><AiAssistant /></Suspense>} />
+          <Route path="escape" element={<Suspense fallback={<PageLoader />}><Escape /></Suspense>} />
+          <Route path="to-xml" element={<Suspense fallback={<PageLoader />}><ToXml /></Suspense>} />
+          
+          {/* SEO Alias Routes - Redirects for common search terms */}
+          <Route path="json-parser" element={<Navigate to="/formatter" replace />} />
+          <Route path="parse-json" element={<Navigate to="/formatter" replace />} />
+          <Route path="json-checker" element={<Navigate to="/validator" replace />} />
+          <Route path="validate-json" element={<Navigate to="/validator" replace />} />
+          <Route path="format-json" element={<Navigate to="/formatter" replace />} />
+          <Route path="prettify-json" element={<Navigate to="/beautifier" replace />} />
+          <Route path="compress-json" element={<Navigate to="/minifier" replace />} />
+          <Route path="json-tree" element={<Navigate to="/viewer" replace />} />
+          <Route path="json-compare" element={<Navigate to="/diff" replace />} />
         </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   </StrictMode>,
 )

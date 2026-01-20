@@ -1,24 +1,23 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Minimize2Icon, CopyIcon, Trash2Icon, ShareIcon, LinkIcon, Maximize2Icon } from '../components/Icons'
+import { CopyIcon, Trash2Icon, ShareIcon, LinkIcon } from '../components/Icons'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
 import { useToast } from '../components/Toast'
 
-export function Minifier() {
+export function Escape() {
   const { showToast } = useToast()
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle')
-  const [stats, setStats] = useState<{ original: number; minified: number; saved: number } | null>(null)
 
   useSEO({
-    title: 'JSON Minifier Online - Compress JSON | JSON Tools',
-    description: 'Minify and compress JSON by removing whitespace. Reduce file size for faster loading. Free online tool with size comparison.',
-    canonical: '/minifier',
+    title: 'JSON Escape/Unescape Online - Free String Encoder | JSON Tools',
+    description: 'Escape and unescape JSON strings online. Convert special characters to escape sequences and vice versa. Free tool for developers.',
+    canonical: '/escape',
   })
 
   const { sharedData, shareUrl } = useShareUrl()
@@ -29,53 +28,45 @@ export function Minifier() {
     }
   }, [sharedData])
 
-  const minify = useCallback(() => {
+  const escapeJson = useCallback(() => {
     if (!input.trim()) {
-      setError('Please enter JSON to minify')
+      setError('Please enter text to escape')
       setOutput('')
-      setStats(null)
       return
     }
 
     try {
-      const parsed = JSON.parse(input)
-      const minified = JSON.stringify(parsed)
-      setOutput(minified)
+      const escaped = JSON.stringify(input)
+      setOutput(escaped)
       setError('')
-      
-      const originalSize = new Blob([input]).size
-      const minifiedSize = new Blob([minified]).size
-      const saved = originalSize - minifiedSize
-      setStats({
-        original: originalSize,
-        minified: minifiedSize,
-        saved: saved,
-      })
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Invalid JSON')
+      setError(e instanceof Error ? e.message : 'Escape failed')
       setOutput('')
-      setStats(null)
     }
   }, [input])
 
-  const beautify = useCallback(() => {
+  const unescapeJson = useCallback(() => {
     if (!input.trim()) {
-      setError('Please enter JSON to beautify')
+      setError('Please enter text to unescape')
       setOutput('')
-      setStats(null)
       return
     }
 
     try {
-      const parsed = JSON.parse(input)
-      const beautified = JSON.stringify(parsed, null, 2)
-      setOutput(beautified)
+      let textToUnescape = input.trim()
+      if (!textToUnescape.startsWith('"')) {
+        textToUnescape = `"${textToUnescape}"`
+      }
+      if (!textToUnescape.endsWith('"')) {
+        textToUnescape = `${textToUnescape}"`
+      }
+      
+      const unescaped = JSON.parse(textToUnescape)
+      setOutput(unescaped)
       setError('')
-      setStats(null)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Invalid JSON')
+      setError(e instanceof Error ? e.message : 'Unescape failed - invalid escape sequence')
       setOutput('')
-      setStats(null)
     }
   }, [input])
 
@@ -91,7 +82,6 @@ export function Minifier() {
     setInput('')
     setOutput('')
     setError('')
-    setStats(null)
   }, [])
 
   const handleShare = useCallback(async () => {
@@ -108,64 +98,42 @@ export function Minifier() {
   })
 
   useKeyboardShortcut([
-    { key: 'Enter', meta: true, handler: minify },
-    { key: 'm', meta: true, handler: minify },
+    { key: 'Enter', meta: true, handler: escapeJson },
     { key: 'c', meta: true, shift: true, handler: handleCopy },
   ])
 
-  const loadSample = () => {
-    const sample = {
-      name: "JSON Tools",
-      version: "1.0.0",
-      description: "Free online JSON utilities",
-      features: [
-        "formatter",
-        "minifier",
-        "converter"
-      ],
-      settings: {
-        theme: "dark",
-        autoSave: true,
-        notifications: {
-          email: true,
-          push: false
-        }
-      }
-    }
-    setInput(JSON.stringify(sample, null, 2))
+  const loadEscapeSample = () => {
+    setInput('Hello "World"!\nThis has special characters: \t tab and \\ backslash')
   }
 
-  const formatBytes = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`
-    return `${(bytes / 1024).toFixed(2)} KB`
+  const loadUnescapeSample = () => {
+    setInput('"Hello \\"World\\"!\\nThis has special characters: \\t tab and \\\\ backslash"')
   }
 
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold">JSON Minifier</h1>
-        <p className="text-muted-foreground">Compress JSON by removing whitespace and formatting</p>
+        <h1 className="text-2xl font-bold">JSON Escape / Unescape</h1>
+        <p className="text-muted-foreground">Escape or unescape JSON string special characters</p>
         <p className="text-xs text-muted-foreground">
-          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">⌘+Enter</kbd> Minify
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">Cmd+Enter</kbd> Escape
           <span className="mx-2">·</span>
-          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">⌘+Shift+C</kbd> Copy
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">Cmd+Shift+C</kbd> Copy
         </p>
       </div>
 
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={minify}
+          onClick={escapeJson}
           className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
         >
-          <Minimize2Icon className="h-4 w-4" />
-          Minify
+          Escape
         </button>
         <button
-          onClick={beautify}
+          onClick={unescapeJson}
           className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
         >
-          <Maximize2Icon className="h-4 w-4" />
-          Beautify
+          Unescape
         </button>
         <button
           onClick={handleCopy}
@@ -183,10 +151,16 @@ export function Minifier() {
           Clear
         </button>
         <button
-          onClick={loadSample}
+          onClick={loadEscapeSample}
           className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
         >
-          Load Sample
+          Escape Sample
+        </button>
+        <button
+          onClick={loadUnescapeSample}
+          className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
+        >
+          Unescape Sample
         </button>
         <button
           onClick={handleShare}
@@ -197,25 +171,6 @@ export function Minifier() {
           {shareStatus === 'copied' ? 'Link Copied!' : 'Share'}
         </button>
       </div>
-
-      {stats && (
-        <div className="flex flex-wrap gap-4 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-          <div className="text-sm">
-            <span className="text-muted-foreground">Original:</span>{' '}
-            <span className="font-mono font-medium">{formatBytes(stats.original)}</span>
-          </div>
-          <div className="text-sm">
-            <span className="text-muted-foreground">Minified:</span>{' '}
-            <span className="font-mono font-medium">{formatBytes(stats.minified)}</span>
-          </div>
-          <div className="text-sm text-green-400">
-            <span className="text-muted-foreground">Saved:</span>{' '}
-            <span className="font-mono font-medium">
-              {formatBytes(stats.saved)} ({((stats.saved / stats.original) * 100).toFixed(1)}%)
-            </span>
-          </div>
-        </div>
-      )}
 
       {error && (
         <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md text-destructive text-sm">
@@ -228,12 +183,12 @@ export function Minifier() {
         className={`grid gap-4 md:grid-cols-2 ${isDragging ? 'ring-2 ring-primary ring-offset-2 ring-offset-background rounded-lg' : ''}`}
       >
         <div className="space-y-2">
-          <label className="text-sm font-medium">Input JSON</label>
+          <label className="text-sm font-medium">Input</label>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Paste your JSON here or drag & drop a file..."
-            className="w-full h-[450px] p-4 bg-card border rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+            placeholder="Enter text to escape or escaped text to unescape..."
+            className="w-full h-[400px] p-4 bg-card border rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
             spellCheck={false}
           />
         </div>
@@ -249,27 +204,51 @@ export function Minifier() {
           <textarea
             value={output}
             readOnly
-            placeholder="Minified JSON will appear here..."
-            className="w-full h-[450px] p-4 bg-card border rounded-lg font-mono text-sm resize-none focus:outline-none"
+            placeholder="Result will appear here..."
+            className="w-full h-[400px] p-4 bg-card border rounded-lg font-mono text-sm resize-none focus:outline-none"
             spellCheck={false}
           />
         </div>
       </div>
 
       <div className="border rounded-lg p-6 bg-card space-y-4">
-        <h2 className="text-lg font-semibold">Why Minify JSON?</h2>
-        <div className="grid gap-4 md:grid-cols-3 text-sm text-muted-foreground">
-          <div>
-            <h3 className="font-medium text-foreground mb-2">Reduce File Size</h3>
-            <p>Remove unnecessary whitespace and formatting to reduce JSON file size by 20-50%.</p>
+        <h2 className="text-lg font-semibold">Common Escape Sequences</h2>
+        <div className="grid gap-4 md:grid-cols-2 text-sm">
+          <div className="space-y-2">
+            <div className="flex justify-between font-mono">
+              <code className="text-muted-foreground">\n</code>
+              <span className="text-muted-foreground">New line</span>
+            </div>
+            <div className="flex justify-between font-mono">
+              <code className="text-muted-foreground">\t</code>
+              <span className="text-muted-foreground">Tab</span>
+            </div>
+            <div className="flex justify-between font-mono">
+              <code className="text-muted-foreground">\r</code>
+              <span className="text-muted-foreground">Carriage return</span>
+            </div>
+            <div className="flex justify-between font-mono">
+              <code className="text-muted-foreground">\\</code>
+              <span className="text-muted-foreground">Backslash</span>
+            </div>
           </div>
-          <div>
-            <h3 className="font-medium text-foreground mb-2">Faster Loading</h3>
-            <p>Smaller files mean faster network transfers and improved application performance.</p>
-          </div>
-          <div>
-            <h3 className="font-medium text-foreground mb-2">API Optimization</h3>
-            <p>Send minified JSON in API responses to reduce bandwidth and response times.</p>
+          <div className="space-y-2">
+            <div className="flex justify-between font-mono">
+              <code className="text-muted-foreground">\"</code>
+              <span className="text-muted-foreground">Double quote</span>
+            </div>
+            <div className="flex justify-between font-mono">
+              <code className="text-muted-foreground">\b</code>
+              <span className="text-muted-foreground">Backspace</span>
+            </div>
+            <div className="flex justify-between font-mono">
+              <code className="text-muted-foreground">\f</code>
+              <span className="text-muted-foreground">Form feed</span>
+            </div>
+            <div className="flex justify-between font-mono">
+              <code className="text-muted-foreground">\uXXXX</code>
+              <span className="text-muted-foreground">Unicode</span>
+            </div>
           </div>
         </div>
       </div>

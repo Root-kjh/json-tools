@@ -4,6 +4,7 @@ import { useFileDrop } from '../hooks/useFileDrop'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
+import { useToast } from '../components/Toast'
 
 interface JsonNode {
   path: string
@@ -21,6 +22,7 @@ export function PathFinder() {
     canonical: '/path-finder',
   })
 
+  const { showToast } = useToast()
   const [input, setInput] = useState('')
   const [parsedData, setParsedData] = useState<unknown>(null)
   const [error, setError] = useState<string | null>(null)
@@ -64,8 +66,9 @@ export function PathFinder() {
     if (!selectedPath) return
     await navigator.clipboard.writeText(selectedPath)
     setCopied(true)
+    showToast('Path copied!')
     setTimeout(() => setCopied(false), 2000)
-  }, [selectedPath])
+  }, [selectedPath, showToast])
 
   const clearAll = useCallback(() => {
     setInput('')

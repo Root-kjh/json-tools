@@ -4,6 +4,7 @@ import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
+import { useToast } from '../components/Toast'
 
 interface TreeNodeProps {
   data: unknown
@@ -105,6 +106,7 @@ function TreeNode({ data, name, path, depth, expandedPaths, toggleExpand, onCopy
 }
 
 export function Viewer() {
+  const { showToast } = useToast()
   const [input, setInput] = useState('')
   const [parsedData, setParsedData] = useState<unknown>(null)
   const [error, setError] = useState('')
@@ -184,8 +186,9 @@ export function Viewer() {
   const handleCopyPath = useCallback(async (path: string) => {
     await navigator.clipboard.writeText(path)
     setCopiedPath(path)
+    showToast('Path copied!')
     setTimeout(() => setCopiedPath(''), 2000)
-  }, [])
+  }, [showToast])
 
   const handleClear = useCallback(() => {
     setInput('')

@@ -4,6 +4,7 @@ import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
+import { useToast } from '../components/Toast'
 
 interface ValidationResult {
   valid: boolean
@@ -55,6 +56,7 @@ function getErrorPosition(json: string, error: SyntaxError): { line: number; col
 }
 
 export function Validator() {
+  const { showToast } = useToast()
   const [input, setInput] = useState('')
   const [result, setResult] = useState<ValidationResult | null>(null)
   const [copied, setCopied] = useState(false)
@@ -100,8 +102,9 @@ export function Validator() {
     if (!input) return
     await navigator.clipboard.writeText(input)
     setCopied(true)
+    showToast('Copied to clipboard!')
     setTimeout(() => setCopied(false), 2000)
-  }, [input])
+  }, [input, showToast])
 
   const handleClear = useCallback(() => {
     setInput('')

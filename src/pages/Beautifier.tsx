@@ -4,8 +4,10 @@ import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
+import { useToast } from '../components/Toast'
 
 export function Beautifier() {
+  const { showToast } = useToast()
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
@@ -66,8 +68,9 @@ export function Beautifier() {
     if (!output) return
     await navigator.clipboard.writeText(output)
     setCopied(true)
+    showToast('Copied to clipboard!')
     setTimeout(() => setCopied(false), 2000)
-  }, [output])
+  }, [output, showToast])
 
   const handleClear = useCallback(() => {
     setInput('')

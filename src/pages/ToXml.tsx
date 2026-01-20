@@ -1,27 +1,85 @@
 import { useState, useCallback, useEffect } from 'react'
-import yaml from 'js-yaml'
-import { FileJsonIcon, CopyIcon, Trash2Icon, ShareIcon, LinkIcon } from '../components/Icons'
+import { CopyIcon, Trash2Icon, ShareIcon, LinkIcon, DownloadIcon } from '../components/Icons'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
 import { useToast } from '../components/Toast'
 
-export function ToYaml() {
+function jsonToXml(obj: unknown, rootName: string = 'root', indent: number = 2): string {
+  const spaces = (level: number) => ' '.repeat(level * indent)
+  
+  const escapeXml = (str: string): string => {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+  }
+  
+  const convert = (data: unknown, tagName: string, level: number): string => {
+    const prefix = spaces(level)
+    
+    if (data === null || data === undefined) {
+      return `${prefix}<${tagName}/>`
+    }
+    
+    if (typeof data === 'boolean' || typeof data === 'number') {
+      return `${prefix}<${tagName}>${data}</${tagName}>`
+    }
+    
+    if (typeof data === 'string') {
+      return `${prefix}<${tagName}>${escapeXml(data)}</${tagName}>`
+    }
+    
+    if (Array.isArray(data)) {
+      if (data.length === 0) {
+        return `${prefix}<${tagName}/>`
+      }
+      return data.map(item => convert(item, 'item', level)).join('\n')
+    }
+    
+    if (typeof data === 'object') {
+      const entries = Object.entries(data as Record<string, unknown>)
+      if (entries.length === 0) {
+        return `${prefix}<${tagName}/>`
+      }
+      
+      const children = entries
+        .map(([key, value]) => {
+          const safeKey = key.replace(/[^a-zA-Z0-9_-]/g, '_')
+          if (Array.isArray(value)) {
+            return value.map(item => convert(item, safeKey, level + 1)).join('\n')
+          }
+          return convert(value, safeKey, level + 1)
+        })
+        .join('\n')
+      
+      return `${prefix}<${tagName}>\n${children}\n${prefix}</${tagName}>`
+    }
+    
+    return `${prefix}<${tagName}>${String(data)}</${tagName}>`
+  }
+  
+  const xmlContent = convert(obj, rootName, 0)
+  return `<?xml version="1.0" encoding="UTF-8"?>\n${xmlContent}`
+}
+
+export function ToXml() {
   const { showToast } = useToast()
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle')
-  const [options, setOptions] = useState({
-    indent: 2,
-  })
+  const [rootName, setRootName] = useState('root')
+  const [indent, setIndent] = useState(2)
 
   useSEO({
-    title: 'JSON to YAML Converter Online - Free | JSON Tools',
-    description: 'Convert JSON to YAML format instantly. Free online converter with customizable indentation. Privacy-first: all processing happens in your browser.',
-    canonical: '/to-yaml',
+    title: 'JSON to XML Converter Online - Free | JSON Tools',
+    description: 'Convert JSON to XML format instantly. Free online converter with customizable root element and indentation. Privacy-first: all processing happens in your browser.',
+    canonical: '/to-xml',
   })
 
   const { sharedData, shareUrl } = useShareUrl()
@@ -41,19 +99,14 @@ export function ToYaml() {
 
     try {
       const parsed = JSON.parse(input)
-      const yamlOutput = yaml.dump(parsed, {
-        indent: options.indent,
-        lineWidth: -1,
-        quotingType: '"',
-        forceQuotes: false,
-      })
-      setOutput(yamlOutput)
+      const xml = jsonToXml(parsed, rootName, indent)
+      setOutput(xml)
       setError('')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Invalid JSON')
       setOutput('')
     }
-  }, [input, options])
+  }, [input, rootName, indent])
 
   const handleCopy = useCallback(async () => {
     if (!output) return
@@ -62,6 +115,17 @@ export function ToYaml() {
     showToast('Copied to clipboard!')
     setTimeout(() => setCopied(false), 2000)
   }, [output, showToast])
+
+  const handleDownload = useCallback(() => {
+    if (!output) return
+    const blob = new Blob([output], { type: 'application/xml' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'data.xml'
+    link.click()
+    URL.revokeObjectURL(url)
+  }, [output])
 
   const handleClear = useCallback(() => {
     setInput('')
@@ -89,14 +153,22 @@ export function ToYaml() {
 
   const loadSample = () => {
     const sample = {
-      name: "JSON Tools",
-      version: "1.0.0",
-      features: ["formatter", "converter", "validator"],
-      settings: {
-        theme: "dark",
-        autoSave: true
-      },
-      tags: ["json", "yaml", "converter"]
+      bookstore: {
+        book: [
+          {
+            title: "The Great Gatsby",
+            author: "F. Scott Fitzgerald",
+            year: 1925,
+            price: 10.99
+          },
+          {
+            title: "1984",
+            author: "George Orwell",
+            year: 1949,
+            price: 8.99
+          }
+        ]
+      }
     }
     setInput(JSON.stringify(sample, null, 2))
   }
@@ -104,12 +176,12 @@ export function ToYaml() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold">JSON to YAML</h1>
-        <p className="text-muted-foreground">Convert JSON to YAML format</p>
+        <h1 className="text-2xl font-bold">JSON to XML</h1>
+        <p className="text-muted-foreground">Convert JSON to XML format</p>
         <p className="text-xs text-muted-foreground">
-          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">⌘+Enter</kbd> Convert
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">Cmd+Enter</kbd> Convert
           <span className="mx-2">·</span>
-          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">⌘+Shift+C</kbd> Copy
+          <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">Cmd+Shift+C</kbd> Copy
         </p>
       </div>
 
@@ -118,8 +190,7 @@ export function ToYaml() {
           onClick={convert}
           className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
         >
-          <FileJsonIcon className="h-4 w-4" />
-          Convert to YAML
+          Convert to XML
         </button>
         <button
           onClick={handleCopy}
@@ -128,6 +199,14 @@ export function ToYaml() {
         >
           <CopyIcon className="h-4 w-4" />
           {copied ? 'Copied!' : 'Copy'}
+        </button>
+        <button
+          onClick={handleDownload}
+          disabled={!output}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors disabled:opacity-50"
+        >
+          <DownloadIcon className="h-4 w-4" />
+          Download
         </button>
         <button
           onClick={handleClear}
@@ -151,10 +230,20 @@ export function ToYaml() {
           {shareStatus === 'copied' ? 'Link Copied!' : 'Share'}
         </button>
         <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Root:</span>
+          <input
+            type="text"
+            value={rootName}
+            onChange={(e) => setRootName(e.target.value || 'root')}
+            className="w-24 px-2 py-1 bg-secondary rounded-md text-sm"
+            placeholder="root"
+          />
+        </div>
+        <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Indent:</span>
           <select
-            value={options.indent}
-            onChange={(e) => setOptions(prev => ({ ...prev, indent: Number(e.target.value) }))}
+            value={indent}
+            onChange={(e) => setIndent(Number(e.target.value))}
             className="px-2 py-1 bg-secondary rounded-md text-sm"
           >
             <option value={2}>2 spaces</option>
@@ -179,13 +268,13 @@ export function ToYaml() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Paste your JSON here or drag & drop a file..."
-            className="w-full h-[500px] p-4 bg-card border rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full h-[450px] p-4 bg-card border rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
             spellCheck={false}
           />
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium">YAML Output</label>
+            <label className="text-sm font-medium">XML Output</label>
             {output && (
               <span className="text-xs text-muted-foreground">
                 ({output.length} chars)
@@ -195,23 +284,33 @@ export function ToYaml() {
           <textarea
             value={output}
             readOnly
-            placeholder="YAML output will appear here..."
-            className="w-full h-[500px] p-4 bg-card border rounded-lg font-mono text-sm resize-none focus:outline-none"
+            placeholder="XML output will appear here..."
+            className="w-full h-[450px] p-4 bg-card border rounded-lg font-mono text-sm resize-none focus:outline-none"
             spellCheck={false}
           />
         </div>
       </div>
 
       <div className="border rounded-lg p-6 bg-card space-y-4">
-        <h2 className="text-lg font-semibold">About JSON to YAML Conversion</h2>
+        <h2 className="text-lg font-semibold">About JSON to XML Conversion</h2>
         <div className="grid gap-4 md:grid-cols-2 text-sm text-muted-foreground">
           <div>
-            <h3 className="font-medium text-foreground mb-2">What is YAML?</h3>
-            <p>YAML (YAML Ain't Markup Language) is a human-readable data serialization format commonly used for configuration files and data exchange.</p>
+            <h3 className="font-medium text-foreground mb-2">Conversion Rules</h3>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Object keys become XML element names</li>
+              <li>Arrays are wrapped with item elements</li>
+              <li>Special characters are escaped</li>
+              <li>Invalid XML names are sanitized</li>
+            </ul>
           </div>
           <div>
-            <h3 className="font-medium text-foreground mb-2">Why convert JSON to YAML?</h3>
-            <p>YAML is more readable than JSON for configuration files, supports comments, and is widely used in DevOps tools like Docker, Kubernetes, and CI/CD pipelines.</p>
+            <h3 className="font-medium text-foreground mb-2">Use Cases</h3>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Legacy system integration</li>
+              <li>SOAP web services</li>
+              <li>Configuration file conversion</li>
+              <li>Data interchange formats</li>
+            </ul>
           </div>
         </div>
       </div>
