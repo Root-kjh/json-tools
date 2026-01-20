@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon, Minimize2Icon, CheckIcon, Maximize2Icon, PlayIcon } from '../components/Icons'
+import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon, Minimize2Icon, CheckIcon, Maximize2Icon, PlayIcon, GitMergeIcon } from '../components/Icons'
 import { useSEO } from '../hooks/useSEO'
 import { getRecentTools, type RecentTool } from '../hooks/useRecentTools'
 
@@ -70,6 +70,18 @@ const tools = [
     description: 'Apply RFC 6902 patch operations to JSON',
     href: '/json-patch',
     icon: PlayIcon,
+  },
+  {
+    name: 'Merge Patch',
+    description: 'Apply RFC 7396 merge patches to JSON',
+    href: '/merge-patch',
+    icon: GitMergeIcon,
+  },
+  {
+    name: 'To OpenAPI',
+    description: 'Generate OpenAPI 3.0 spec from JSON',
+    href: '/to-openapi',
+    icon: FileCodeIcon,
   },
   {
     name: 'JSON Query',
