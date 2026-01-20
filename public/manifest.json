@@ -1,0 +1,32 @@
+{
+  "name": "JSON Tools",
+  "short_name": "JSON Tools",
+  "description": "Free online JSON tools - format, validate, convert, and compare. Privacy-first: all processing happens in your browser.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/thumbnail.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/thumbnail.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["developer", "utilities", "productivity"],
+  "screenshots": [
+    {
+      "src": "/og-image-new.svg",
+      "sizes": "1200x630",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon } from '../components/Icons'
+import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon } from '../components/Icons'
 import { useSEO } from '../hooks/useSEO'
 
 const tools = [
@@ -19,6 +19,12 @@ const tools = [
     name: 'JSON to CSV',
     description: 'Convert JSON arrays to CSV format for spreadsheets',
     href: '/to-csv',
+    icon: TableIcon,
+  },
+  {
+    name: 'JSON to YAML',
+    description: 'Convert JSON to YAML for config files and DevOps tools',
+    href: '/to-yaml',
     icon: ArrowRightLeftIcon,
   },
   {
@@ -26,6 +32,12 @@ const tools = [
     description: 'Generate JSON Schema with format detection',
     href: '/to-schema',
     icon: BracesIcon,
+  },
+  {
+    name: 'JSON Query',
+    description: 'Query and filter JSON using JSONPath expressions',
+    href: '/json-query',
+    icon: CodeIcon,
   },
   {
     name: 'JSON Diff',

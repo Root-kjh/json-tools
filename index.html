@@ -4,9 +4,11 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/thumbnail.png" />
     <link rel="apple-touch-icon" href="/thumbnail.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#3b82f6" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Free online JSON tools - format, validate, convert to TypeScript/CSV, compare, and find paths. Privacy-first: all processing happens in your browser." />
-    <meta name="keywords" content="JSON, formatter, validator, TypeScript, CSV, diff, path finder, online tools, developer tools" />
+    <meta name="description" content="Free online JSON tools - format, validate, convert to TypeScript/CSV/YAML, compare, and query. Privacy-first: all processing happens in your browser." />
+    <meta name="keywords" content="JSON, formatter, validator, TypeScript, CSV, YAML, diff, path finder, JSONPath, query, online tools, developer tools" />
     <meta name="author" content="JSON Tools" />
     <meta property="og:title" content="JSON Tools - Free Online JSON Utilities" />
     <meta property="og:description" content="Format, validate, convert, and compare JSON. All processing happens client-side." />
@@ -20,6 +22,35 @@
     <meta name="twitter:description" content="Format, validate, convert, and compare JSON. All processing happens client-side." />
     <meta name="twitter:image" content="https://json.jobby-time.com/og-image-new.svg" />
     <title>JSON Tools - Free Online JSON Formatter, Validator & Converter</title>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON Tools",
+      "url": "https://json.jobby-time.com",
+      "description": "Free online JSON tools - format, validate, convert to TypeScript/CSV/YAML, compare, and query. Privacy-first: all processing happens in your browser.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "JSON Formatter & Validator",
+        "JSON to TypeScript Converter",
+        "JSON to CSV Converter",
+        "JSON to YAML Converter",
+        "JSON Schema Generator",
+        "JSON Query with JSONPath",
+        "JSON Diff Comparison",
+        "JSON Path Finder",
+        "AI JSON Assistant"
+      ],
+      "browserRequirements": "Requires JavaScript",
+      "softwareVersion": "1.0.0"
+    }
+    </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XGCGFSHGBL"></script>
     <script>
       window.dataLayer = window.dataLayer || [];

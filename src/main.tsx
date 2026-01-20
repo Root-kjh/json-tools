@@ -8,6 +8,8 @@ import { Formatter } from './pages/Formatter'
 import { ToTypeScript } from './pages/ToTypeScript'
 import { ToCsv } from './pages/ToCsv'
 import { ToSchema } from './pages/ToSchema'
+import { ToYaml } from './pages/ToYaml'
+import { JsonQuery } from './pages/JsonQuery'
 import { Diff } from './pages/Diff'
 import { PathFinder } from './pages/PathFinder'
 import { AiAssistant } from './pages/AiAssistant'
@@ -22,6 +24,8 @@ createRoot(document.getElementById('root')!).render(
           <Route path="to-typescript" element={<ToTypeScript />} />
           <Route path="to-csv" element={<ToCsv />} />
           <Route path="to-schema" element={<ToSchema />} />
+          <Route path="to-yaml" element={<ToYaml />} />
+          <Route path="json-query" element={<JsonQuery />} />
           <Route path="diff" element={<Diff />} />
           <Route path="path-finder" element={<PathFinder />} />
           <Route path="ai-assistant" element={<AiAssistant />} />
