@@ -5,12 +5,12 @@ import { useTheme } from '../hooks/useTheme'
 
 const tools = [
   { name: 'Formatter', href: '/formatter' },
+  { name: 'Validator', href: '/validator' },
+  { name: 'Viewer', href: '/viewer' },
   { name: 'Minifier', href: '/minifier' },
+  { name: 'Beautifier', href: '/beautifier' },
   { name: 'To TS', href: '/to-typescript' },
-  { name: 'To CSV', href: '/to-csv' },
-  { name: 'To YAML', href: '/to-yaml' },
-  { name: 'From YAML', href: '/from-yaml' },
-  { name: 'Schema', href: '/to-schema' },
+  { name: 'JSON↔YAML', href: '/to-yaml' },
   { name: 'Query', href: '/json-query' },
   { name: 'Diff', href: '/diff' },
   { name: '✨ AI', href: '/ai-assistant' },

@@ -1,42 +1,54 @@
 import { Link } from 'react-router-dom'
-import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon, Minimize2Icon } from '../components/Icons'
+import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon, Minimize2Icon, CheckIcon, Maximize2Icon } from '../components/Icons'
 import { useSEO } from '../hooks/useSEO'
 
 const tools = [
   {
     name: 'JSON Formatter',
-    description: 'Format, beautify, and validate your JSON with syntax highlighting',
+    description: 'Format and validate your JSON with syntax highlighting',
     href: '/formatter',
     icon: FileJsonIcon,
   },
   {
+    name: 'JSON Validator',
+    description: 'Validate JSON syntax with error details and line numbers',
+    href: '/validator',
+    icon: CheckIcon,
+  },
+  {
+    name: 'JSON Viewer',
+    description: 'Interactive tree view to explore JSON structure',
+    href: '/viewer',
+    icon: SearchIcon,
+  },
+  {
+    name: 'JSON Beautifier',
+    description: 'Pretty print JSON with customizable indentation',
+    href: '/beautifier',
+    icon: Maximize2Icon,
+  },
+  {
     name: 'JSON Minifier',
-    description: 'Compress JSON by removing whitespace for smaller file size',
+    description: 'Compress JSON by removing whitespace',
     href: '/minifier',
     icon: Minimize2Icon,
   },
   {
     name: 'JSON to TypeScript',
-    description: 'Generate TypeScript interfaces from JSON data',
+    description: 'Generate TypeScript interfaces from JSON',
     href: '/to-typescript',
     icon: FileCodeIcon,
   },
   {
     name: 'JSON to CSV',
-    description: 'Convert JSON arrays to CSV format for spreadsheets',
+    description: 'Convert JSON arrays to CSV format',
     href: '/to-csv',
     icon: TableIcon,
   },
   {
-    name: 'JSON to YAML',
-    description: 'Convert JSON to YAML for config files and DevOps tools',
+    name: 'JSON ↔ YAML',
+    description: 'Convert between JSON and YAML formats',
     href: '/to-yaml',
-    icon: ArrowRightLeftIcon,
-  },
-  {
-    name: 'YAML to JSON',
-    description: 'Convert YAML config files back to JSON format',
-    href: '/from-yaml',
     icon: ArrowRightLeftIcon,
   },
   {
@@ -47,25 +59,19 @@ const tools = [
   },
   {
     name: 'JSON Query',
-    description: 'Query and filter JSON using JSONPath expressions',
+    description: 'Query JSON using JSONPath expressions',
     href: '/json-query',
     icon: CodeIcon,
   },
   {
     name: 'JSON Diff',
-    description: 'Compare two JSON objects and see the differences',
+    description: 'Compare two JSON objects side by side',
     href: '/diff',
     icon: GitCompareIcon,
   },
   {
-    name: 'JSON Path Finder',
-    description: 'Click on any value to get its JSON path',
-    href: '/path-finder',
-    icon: SearchIcon,
-  },
-  {
     name: '✨ AI Assistant',
-    description: 'Generate JSON from natural language, explain structures, create mock data',
+    description: 'Generate JSON from natural language with AI',
     href: '/ai-assistant',
     icon: SparklesIcon,
   },
