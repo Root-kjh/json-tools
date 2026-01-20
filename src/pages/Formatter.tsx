@@ -2,9 +2,16 @@ import { useState, useCallback, useMemo } from 'react'
 import { CopyIcon, CheckIcon, Trash2Icon, Minimize2Icon, Maximize2Icon, UploadIcon, WrenchIcon } from '../components/Icons'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
+import { useSEO } from '../hooks/useSEO'
 import { repairJson } from '../utils/jsonRepair'
 
 export function Formatter() {
+  useSEO({
+    title: 'JSON Formatter & Validator Online - Free',
+    description: 'Format, beautify, minify, and validate JSON online for free. Auto-repair broken JSON, customizable indentation. Privacy-first: runs entirely in your browser.',
+    canonical: '/formatter',
+  })
+
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)

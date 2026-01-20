@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react'
 import { CopyIcon, CheckIcon, Trash2Icon, SearchIcon, UploadIcon } from '../components/Icons'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
+import { useSEO } from '../hooks/useSEO'
 
 interface JsonNode {
   path: string
@@ -13,6 +14,12 @@ interface JsonNode {
 }
 
 export function PathFinder() {
+  useSEO({
+    title: 'JSON Path Finder - Get JSONPath Online - Free',
+    description: 'Click on any JSON value to get its JSONPath instantly. Interactive JSON tree viewer with path extraction. Free online tool for developers.',
+    canonical: '/path-finder',
+  })
+
   const [input, setInput] = useState('')
   const [parsedData, setParsedData] = useState<unknown>(null)
   const [error, setError] = useState<string | null>(null)

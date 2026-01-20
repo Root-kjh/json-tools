@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon } from '../components/Icons'
+import { useSEO } from '../hooks/useSEO'
 
 const tools = [
   {
@@ -41,6 +42,12 @@ const tools = [
 ]
 
 export function Home() {
+  useSEO({
+    title: 'JSON Tools - Free Online JSON Formatter, Validator & Converter',
+    description: 'Free online JSON tools - format, validate, convert to TypeScript/CSV/Schema, compare, and find paths. Privacy-first: all processing happens in your browser.',
+    canonical: '/',
+  })
+
   return (
     <div className="space-y-12">
       <section className="text-center space-y-4 py-12">

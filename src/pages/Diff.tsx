@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react'
 import { GitCompareIcon, Trash2Icon, UploadIcon } from '../components/Icons'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
+import { useSEO } from '../hooks/useSEO'
 
 type DiffType = 'added' | 'removed' | 'changed' | 'unchanged'
 
@@ -78,6 +79,12 @@ function formatValue(value: unknown): string {
 }
 
 export function Diff() {
+  useSEO({
+    title: 'JSON Diff - Compare JSON Objects Online - Free',
+    description: 'Compare two JSON objects and visualize differences. See added, removed, and changed values highlighted. Free online JSON comparison tool.',
+    canonical: '/diff',
+  })
+
   const [left, setLeft] = useState('')
   const [right, setRight] = useState('')
   const [results, setResults] = useState<DiffResult[]>([])

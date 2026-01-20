@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react'
 import { CopyIcon, CheckIcon, Trash2Icon, CodeIcon, UploadIcon } from '../components/Icons'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
+import { useSEO } from '../hooks/useSEO'
 
 function jsonToTypeScript(json: unknown, rootName: string = 'Root'): string {
   const interfaces: string[] = []
@@ -56,6 +57,12 @@ function jsonToTypeScript(json: unknown, rootName: string = 'Root'): string {
 }
 
 export function ToTypeScript() {
+  useSEO({
+    title: 'JSON to TypeScript Converter Online - Free',
+    description: 'Convert JSON to TypeScript interfaces instantly. Generate type-safe TypeScript definitions from any JSON data. Free online tool, runs in your browser.',
+    canonical: '/to-typescript',
+  })
+
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)

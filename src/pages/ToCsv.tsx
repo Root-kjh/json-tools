@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react'
 import { CopyIcon, CheckIcon, Trash2Icon, DownloadIcon, TableIcon, UploadIcon } from '../components/Icons'
 import { useFileDrop } from '../hooks/useFileDrop'
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut'
+import { useSEO } from '../hooks/useSEO'
 
 type JsonArray = Record<string, unknown>[]
 
@@ -45,6 +46,12 @@ function jsonToCsv(input: unknown): string {
 }
 
 export function ToCsv() {
+  useSEO({
+    title: 'JSON to CSV Converter Online - Free',
+    description: 'Convert JSON arrays to CSV format instantly. Download as CSV file or copy to clipboard. Free online tool for spreadsheet export, runs in your browser.',
+    canonical: '/to-csv',
+  })
+
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
