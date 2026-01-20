@@ -6,6 +6,8 @@ import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
 import { useToast } from '../components/Toast'
 import { repairJson } from '../utils/jsonRepair'
+import { useLargeFile } from '../hooks/useLargeFile'
+import { ProgressBar } from '../components/ProgressBar'
 
 export function Formatter() {
   useSEO({
@@ -24,6 +26,17 @@ export function Formatter() {
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'error'>('idle')
   const [shareError, setShareError] = useState<string | null>(null)
 
+  const {
+    state: processingState,
+    progress,
+    stats,
+    isLargeFile,
+    processLargeJson,
+    reset: resetLargeFile,
+    formatFileSize,
+    isProcessing
+  } = useLargeFile()
+
   const { sharedData, shareUrl, isShared, clearShare } = useShareUrl()
 
   useEffect(() => {
@@ -38,10 +51,23 @@ export function Formatter() {
     }
   }, [sharedData, indentSize])
 
-  const formatJson = useCallback(() => {
+  const formatJson = useCallback(async () => {
     if (!input.trim()) {
       setOutput('')
       setError(null)
+      return
+    }
+
+    if (isLargeFile(input)) {
+      try {
+        const formatted = await processLargeJson(input, 'format', { indentSize })
+        setOutput(formatted)
+        setError(null)
+      } catch (e) {
+        const errorMessage = e instanceof Error ? e.message : 'Invalid JSON'
+        setError(errorMessage)
+        setOutput('')
+      }
       return
     }
 
@@ -55,12 +81,25 @@ export function Formatter() {
       setError(errorMessage)
       setOutput('')
     }
-  }, [input, indentSize])
+  }, [input, indentSize, isLargeFile, processLargeJson])
 
-  const minifyJson = useCallback(() => {
+  const minifyJson = useCallback(async () => {
     if (!input.trim()) {
       setOutput('')
       setError(null)
+      return
+    }
+
+    if (isLargeFile(input)) {
+      try {
+        const minified = await processLargeJson(input, 'minify')
+        setOutput(minified)
+        setError(null)
+      } catch (e) {
+        const errorMessage = e instanceof Error ? e.message : 'Invalid JSON'
+        setError(errorMessage)
+        setOutput('')
+      }
       return
     }
 
@@ -74,7 +113,7 @@ export function Formatter() {
       setError(errorMessage)
       setOutput('')
     }
-  }, [input])
+  }, [input, isLargeFile, processLargeJson])
 
   const autoRepair = useCallback(() => {
     if (!input.trim()) {
@@ -113,7 +152,8 @@ export function Formatter() {
     setInput('')
     setOutput('')
     setError(null)
-  }, [])
+    resetLargeFile()
+  }, [resetLargeFile])
 
   const loadSample = useCallback(() => {
     const sample = {
@@ -280,6 +320,22 @@ export function Formatter() {
               <li key={index}>{fix}</li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {isProcessing && (
+        <div className="p-4 bg-secondary/50 border border-border rounded-md space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">
+              {processingState === 'reading' ? 'Reading file...' : 'Processing large file...'}
+            </span>
+            {stats && (
+              <span className="text-muted-foreground">
+                {formatFileSize(stats.inputSize)}
+              </span>
+            )}
+          </div>
+          <ProgressBar progress={progress} />
         </div>
       )}
 
