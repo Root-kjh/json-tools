@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Tools</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/>
+          <path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/>
+        </svg>
+        <span>JSON Tools</span>
+      </div>
+      <a href="https://json.jobby-time.com" target="_blank" class="web-link" title="Open full website">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="format">Format</button>
+      <button class="tab" data-tab="validate">Validate</button>
+      <button class="tab" data-tab="minify">Minify</button>
+      <button class="tab" data-tab="convert">Convert</button>
+    </div>
+
+    <!-- Input -->
+    <div class="input-section">
+      <div class="input-header">
+        <span>Input JSON</span>
+        <div class="input-actions">
+          <button id="pasteBtn" class="icon-btn" title="Paste from clipboard">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+          <button id="clearBtn" class="icon-btn" title="Clear">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18"/>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <textarea id="input" placeholder="Paste your JSON here..." spellcheck="false"></textarea>
+    </div>
+
+    <!-- Options (for Format tab) -->
+    <div id="formatOptions" class="options">
+      <label>
+        <span>Indent:</span>
+        <select id="indentSize">
+          <option value="2">2 spaces</option>
+          <option value="4">4 spaces</option>
+          <option value="tab">Tab</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Convert Options -->
+    <div id="convertOptions" class="options hidden">
+      <label>
+        <span>To:</span>
+        <select id="convertType">
+          <option value="typescript">TypeScript</option>
+          <option value="yaml">YAML</option>
+          <option value="csv">CSV</option>
+          <option value="xml">XML</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Action Button -->
+    <button id="actionBtn" class="action-btn">
+      <span id="actionText">Format JSON</span>
+      <svg id="actionIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </button>
+
+    <!-- Output -->
+    <div id="outputSection" class="output-section hidden">
+      <div class="output-header">
+        <span id="outputLabel">Output</span>
+        <div class="output-actions">
+          <button id="copyBtn" class="icon-btn" title="Copy to clipboard">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <pre id="output"></pre>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="status hidden"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span class="privacy-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        100% Local
+      </span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
