@@ -60,6 +60,12 @@ const tools = [
     icon: BracesIcon,
   },
   {
+    name: 'Schema Validator',
+    description: 'Validate JSON against a JSON Schema',
+    href: '/schema-validator',
+    icon: ShieldCheckIcon,
+  },
+  {
     name: 'JSON Query',
     description: 'Query JSON using JSONPath expressions',
     href: '/json-query',
