@@ -102,6 +102,12 @@ const tools = [
     icon: BracesIcon,
   },
   {
+    name: 'JSON to Markdown',
+    description: 'Convert JSON arrays to Markdown tables',
+    href: '/to-markdown',
+    icon: TableIcon,
+  },
+  {
     name: '✨ AI Assistant',
     description: 'Generate JSON from natural language with AI',
     href: '/ai-assistant',
