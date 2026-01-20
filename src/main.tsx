@@ -27,6 +27,7 @@ const ToXml = lazy(() => import('./pages/ToXml').then(m => ({ default: m.ToXml }
 const Sorter = lazy(() => import('./pages/Sorter').then(m => ({ default: m.Sorter })))
 const Base64 = lazy(() => import('./pages/Base64').then(m => ({ default: m.Base64 })))
 const Flattener = lazy(() => import('./pages/Flattener').then(m => ({ default: m.Flattener })))
+const Privacy = lazy(() => import('./pages/Privacy').then(m => ({ default: m.Privacy })))
 
 function PageLoader() {
   return (
@@ -64,6 +65,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="sorter" element={<Suspense fallback={<PageLoader />}><Sorter /></Suspense>} />
           <Route path="base64" element={<Suspense fallback={<PageLoader />}><Base64 /></Suspense>} />
           <Route path="flattener" element={<Suspense fallback={<PageLoader />}><Flattener /></Suspense>} />
+          <Route path="privacy" element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
           
           {/* SEO Alias Routes - Redirects for common search terms */}
           <Route path="json-parser" element={<Navigate to="/formatter" replace />} />
