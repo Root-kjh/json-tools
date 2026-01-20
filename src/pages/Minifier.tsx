@@ -5,6 +5,8 @@ import { useFileDrop } from '../hooks/useFileDrop'
 import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
 import { useToast } from '../components/Toast'
+import { useLargeFile } from '../hooks/useLargeFile'
+import { ProgressBar } from '../components/ProgressBar'
 
 export function Minifier() {
   const { showToast } = useToast()
@@ -14,6 +16,16 @@ export function Minifier() {
   const [copied, setCopied] = useState(false)
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle')
   const [stats, setStats] = useState<{ original: number; minified: number; saved: number } | null>(null)
+
+  const {
+    progress,
+    isLargeFile,
+    processLargeJson,
+    reset: resetLargeFile,
+    isProcessing,
+    state: processingState,
+    formatFileSize
+  } = useLargeFile()
 
   useSEO({
     title: 'JSON Minifier Online - Compress JSON | JSON Tools',
@@ -29,11 +41,29 @@ export function Minifier() {
     }
   }, [sharedData])
 
-  const minify = useCallback(() => {
+  const minify = useCallback(async () => {
     if (!input.trim()) {
       setError('Please enter JSON to minify')
       setOutput('')
       setStats(null)
+      return
+    }
+
+    if (isLargeFile(input)) {
+      try {
+        const minified = await processLargeJson(input, 'minify')
+        setOutput(minified)
+        setError('')
+        
+        const originalSize = new Blob([input]).size
+        const minifiedSize = new Blob([minified]).size
+        const saved = originalSize - minifiedSize
+        setStats({ original: originalSize, minified: minifiedSize, saved })
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Invalid JSON')
+        setOutput('')
+        setStats(null)
+      }
       return
     }
 
@@ -56,13 +86,27 @@ export function Minifier() {
       setOutput('')
       setStats(null)
     }
-  }, [input])
+  }, [input, isLargeFile, processLargeJson])
 
-  const beautify = useCallback(() => {
+  const beautify = useCallback(async () => {
     if (!input.trim()) {
       setError('Please enter JSON to beautify')
       setOutput('')
       setStats(null)
+      return
+    }
+
+    if (isLargeFile(input)) {
+      try {
+        const beautified = await processLargeJson(input, 'format', { indentSize: 2 })
+        setOutput(beautified)
+        setError('')
+        setStats(null)
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Invalid JSON')
+        setOutput('')
+        setStats(null)
+      }
       return
     }
 
@@ -77,7 +121,7 @@ export function Minifier() {
       setOutput('')
       setStats(null)
     }
-  }, [input])
+  }, [input, isLargeFile, processLargeJson])
 
   const handleCopy = useCallback(async () => {
     if (!output) return
@@ -92,7 +136,8 @@ export function Minifier() {
     setOutput('')
     setError('')
     setStats(null)
-  }, [])
+    resetLargeFile()
+  }, [resetLargeFile])
 
   const handleShare = useCallback(async () => {
     if (!input.trim()) return
@@ -197,6 +242,18 @@ export function Minifier() {
           {shareStatus === 'copied' ? 'Link Copied!' : 'Share'}
         </button>
       </div>
+
+      {isProcessing && (
+        <div className="p-4 bg-secondary/50 border border-border rounded-md space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">
+              {processingState === 'reading' ? 'Reading file...' : 'Processing large file...'}
+            </span>
+            <span className="text-muted-foreground">{formatFileSize(input.length)}</span>
+          </div>
+          <ProgressBar progress={progress} />
+        </div>
+      )}
 
       {stats && (
         <div className="flex flex-wrap gap-4 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">

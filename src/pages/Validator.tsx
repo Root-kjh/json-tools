@@ -5,6 +5,8 @@ import { useFileDrop } from '../hooks/useFileDrop'
 import { useSEO } from '../hooks/useSEO'
 import { useShareUrl } from '../hooks/useShareUrl'
 import { useToast } from '../components/Toast'
+import { useLargeFile } from '../hooks/useLargeFile'
+import { ProgressBar } from '../components/ProgressBar'
 
 interface ValidationResult {
   valid: boolean
@@ -62,6 +64,16 @@ export function Validator() {
   const [copied, setCopied] = useState(false)
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle')
 
+  const {
+    progress,
+    isLargeFile,
+    processLargeJson,
+    reset: resetLargeFile,
+    isProcessing,
+    state: processingState,
+    formatFileSize
+  } = useLargeFile()
+
   useSEO({
     title: 'JSON Validator Online - Check JSON Syntax | JSON Tools',
     description: 'Validate JSON syntax instantly. Find errors with line numbers and detailed error messages. Free online JSON validator with statistics.',
@@ -76,9 +88,28 @@ export function Validator() {
     }
   }, [sharedData])
 
-  const validate = useCallback(() => {
+  const validate = useCallback(async () => {
     if (!input.trim()) {
       setResult({ valid: false, error: 'Please enter JSON to validate' })
+      return
+    }
+
+    if (isLargeFile(input)) {
+      try {
+        await processLargeJson(input, 'validate')
+        const parsed = JSON.parse(input)
+        const stats = analyzeJson(parsed)
+        setResult({ valid: true, stats })
+      } catch (e) {
+        const error = e as SyntaxError
+        const position = getErrorPosition(input, error)
+        setResult({
+          valid: false,
+          error: error.message,
+          errorLine: position?.line,
+          errorColumn: position?.column,
+        })
+      }
       return
     }
 
@@ -96,7 +127,7 @@ export function Validator() {
         errorColumn: position?.column,
       })
     }
-  }, [input])
+  }, [input, isLargeFile, processLargeJson])
 
   const handleCopy = useCallback(async () => {
     if (!input) return
@@ -109,7 +140,8 @@ export function Validator() {
   const handleClear = useCallback(() => {
     setInput('')
     setResult(null)
-  }, [])
+    resetLargeFile()
+  }, [resetLargeFile])
 
   const handleShare = useCallback(async () => {
     if (!input.trim()) return
@@ -205,6 +237,18 @@ export function Validator() {
           {shareStatus === 'copied' ? 'Link Copied!' : 'Share'}
         </button>
       </div>
+
+      {isProcessing && (
+        <div className="p-4 bg-secondary/50 border border-border rounded-md space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">
+              {processingState === 'reading' ? 'Reading file...' : 'Validating large file...'}
+            </span>
+            <span className="text-muted-foreground">{formatFileSize(input.length)}</span>
+          </div>
+          <ProgressBar progress={progress} />
+        </div>
+      )}
 
       {result && (
         <div className={`p-4 rounded-lg border ${result.valid ? 'bg-green-500/10 border-green-500/20' : 'bg-destructive/10 border-destructive/20'}`}>
