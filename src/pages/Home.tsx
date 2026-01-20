@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon, Minimize2Icon, CheckIcon, Maximize2Icon } from '../components/Icons'
+import { BracesIcon, FileJsonIcon, ArrowRightLeftIcon, GitCompareIcon, SearchIcon, FileCodeIcon, ShieldCheckIcon, GithubIcon, StarIcon, SparklesIcon, CodeIcon, TableIcon, Minimize2Icon, CheckIcon, Maximize2Icon, PlayIcon } from '../components/Icons'
 import { useSEO } from '../hooks/useSEO'
 import { getRecentTools, type RecentTool } from '../hooks/useRecentTools'
 
@@ -64,6 +64,12 @@ const tools = [
     description: 'Validate JSON against a JSON Schema',
     href: '/schema-validator',
     icon: ShieldCheckIcon,
+  },
+  {
+    name: 'JSON Patch',
+    description: 'Apply RFC 6902 patch operations to JSON',
+    href: '/json-patch',
+    icon: PlayIcon,
   },
   {
     name: 'JSON Query',

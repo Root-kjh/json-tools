@@ -29,6 +29,7 @@ const Base64 = lazy(() => import('./pages/Base64').then(m => ({ default: m.Base6
 const Flattener = lazy(() => import('./pages/Flattener').then(m => ({ default: m.Flattener })))
 const ToMarkdown = lazy(() => import('./pages/ToMarkdown').then(m => ({ default: m.ToMarkdown })))
 const SchemaValidator = lazy(() => import('./pages/SchemaValidator').then(m => ({ default: m.SchemaValidator })))
+const JsonPatch = lazy(() => import('./pages/JsonPatch').then(m => ({ default: m.JsonPatch })))
 const Privacy = lazy(() => import('./pages/Privacy').then(m => ({ default: m.Privacy })))
 
 function PageLoader() {
@@ -69,6 +70,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="flattener" element={<Suspense fallback={<PageLoader />}><Flattener /></Suspense>} />
           <Route path="to-markdown" element={<Suspense fallback={<PageLoader />}><ToMarkdown /></Suspense>} />
           <Route path="schema-validator" element={<Suspense fallback={<PageLoader />}><SchemaValidator /></Suspense>} />
+          <Route path="json-patch" element={<Suspense fallback={<PageLoader />}><JsonPatch /></Suspense>} />
           <Route path="privacy" element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
           
           {/* SEO Alias Routes - Redirects for common search terms */}
