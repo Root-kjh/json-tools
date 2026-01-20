@@ -24,7 +24,7 @@ export function Layout() {
             Sponsor
           </a>
           <a
-            href="https://buymeacoffee.com/rootkjh"
+            href="https://buymeacoffee.com/root.kjh"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors text-xs font-medium"
